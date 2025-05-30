@@ -15,7 +15,6 @@ root = tk.Tk()
 root.title("Sistema de Login")
 root.configure(bg="gray")
 root.geometry("300x300")
-# Criar barra de menu
 menu_bar = tk.Menu(root)
 
 # Menu "Arquivo"
@@ -43,20 +42,37 @@ def mostrar_dados_usuario(dados):
 
     tk.Label(janela_dados, text="Informações do Usuário", font=("Helvetica", 14, "bold"), bg="#f0f8ff").pack(pady=10)
 
-    for info in [
-        f"Nome: {nome}",
-        f"CPF: {cpf}",
-        f"Bloco: {bloco}",
-        f"Apartamento: {numero_ap}",
-        f"Email: {email}"
-    ]:
-        tk.Label(janela_dados, text=info, anchor="w", justify="left", bg="#f0f8ff").pack(fill="x", padx=15, pady=4)
+    # Frame com labels que podem ser atualizados depois
+    frame_info = tk.Frame(janela_dados, bg="#f0f8ff")
+    frame_info.pack(pady=5)
 
-    tk.Button(janela_dados, text="Editar Dados", command=lambda: abrir_edicao_usuario((nome, cpf, bloco, numero_ap, email))).pack(pady=10)
-    tk.Button(janela_dados, text="Excluir Conta", fg="red", command=lambda: excluir_usuario(cpf, janela_dados)).pack(pady=5)
+    labels = []
 
+    def atualizar_labels(nome, cpf, bloco, numero_ap, email):
+        for label in labels:
+            label.destroy()
+        labels.clear()
+        for info in [
+            f"Nome: {nome}",
+            f"CPF: {cpf}",
+            f"Bloco: {bloco}",
+            f"Apartamento: {numero_ap}",
+            f"Email: {email}"
+        ]:
+            lbl = tk.Label(frame_info, text=info, anchor="w", justify="left", bg="#f0f8ff")
+            lbl.pack(fill="x", padx=15, pady=4)
+            labels.append(lbl)
 
-def abrir_edicao_usuario(dados):
+    atualizar_labels(nome, cpf, bloco, numero_ap, email)
+
+    # Botões
+    tk.Button(janela_dados, text="Editar Dados",
+              command=lambda: abrir_edicao_usuario((nome, cpf, bloco, numero_ap, email), atualizar_labels)).pack(pady=10)
+
+    tk.Button(janela_dados, text="Excluir Conta", fg="red",
+              command=lambda: excluir_usuario(cpf, janela_dados)).pack(pady=5)
+
+def abrir_edicao_usuario(dados, callback=None):
     nome_atual, cpf, bloco_atual, ap_atual, email_atual = dados
 
     janela_edicao = tk.Toplevel(root)
@@ -101,6 +117,11 @@ def abrir_edicao_usuario(dados):
             bd.conn.commit()
             messagebox.showinfo("Sucesso", "Dados atualizados com sucesso!")
             janela_edicao.destroy()
+
+            # Atualiza labels na janela de dados do usuário
+            if callback:
+                callback(novo_nome, cpf, novo_bloco, novo_ap, novo_email)
+
         except Exception as e:
             messagebox.showerror("Erro", f"Erro ao atualizar dados: {e}")
 
