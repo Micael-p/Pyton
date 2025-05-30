@@ -56,16 +56,31 @@ def mostrar_usuarios(nome_adm=None, cpf_adm=None):
 
                 tk.Button(frame, text="Excluir", fg="red", command=excluir_usuario).pack(side="right", padx=5)
 
-                def editar_usuario(cpf_local=cpf, nome_local=nome, bloco_local=bloco, ap_local=numeroAp,
-                                   email_local=email):
+                def editar_usuario(
+                        cpf_local=cpf, nome_local=nome, bloco_local=bloco,
+                        ap_local=numeroAp, email_local=email, login_local=""
+                ):
+                    cursor.execute("SELECT login FROM Pessoa WHERE cpf = ?", (cpf_local,))
+                    login_result = cursor.fetchone()
+                    login_local = login_result[0] if login_result else ""
+
                     janela_editar = tk.Toplevel(janela_usuarios)
                     janela_editar.title(f"Editar: {nome_local}")
-                    janela_editar.geometry("350x350")
+                    janela_editar.geometry("350x450")
 
                     tk.Label(janela_editar, text="Nome").pack()
                     entry_nome = tk.Entry(janela_editar)
                     entry_nome.insert(0, nome_local)
                     entry_nome.pack()
+
+                    tk.Label(janela_editar, text="Login").pack()
+                    entry_login = tk.Entry(janela_editar)
+                    entry_login.insert(0, login_local)
+                    entry_login.pack()
+
+                    tk.Label(janela_editar, text="Senha").pack()
+                    entry_senha = tk.Entry(janela_editar, show="*")
+                    entry_senha.pack()
 
                     tk.Label(janela_editar, text="Bloco").pack()
                     entry_bloco = tk.Entry(janela_editar)
@@ -84,16 +99,22 @@ def mostrar_usuarios(nome_adm=None, cpf_adm=None):
 
                     def salvar_edicao():
                         novo_nome = entry_nome.get()
+                        novo_login = entry_login.get()
+                        nova_senha = entry_senha.get()
                         novo_bloco = entry_bloco.get()
                         novo_ap = entry_ap.get()
                         novo_email = entry_email.get()
 
                         try:
+                            # Atualiza os dados no banco
                             cursor.execute("""
                                 UPDATE Pessoa
-                                SET nome = ?, bloco = ?, numeroAp = ?, email = ?
+                                SET nome = ?, login = ?, senha = ?, bloco = ?, numeroAp = ?, email = ?
                                 WHERE cpf = ?
-                            """, (novo_nome, int(novo_bloco), int(novo_ap), novo_email, cpf_local))
+                            """, (
+                                novo_nome, novo_login, nova_senha,
+                                int(novo_bloco), int(novo_ap), novo_email, cpf_local
+                            ))
                             bd.conn.commit()
                             messagebox.showinfo("Sucesso", "Dados do usuário atualizados.")
                             janela_editar.destroy()
