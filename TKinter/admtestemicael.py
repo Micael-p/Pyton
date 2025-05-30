@@ -131,22 +131,38 @@ def mostrar_usuarios(nome_adm=None, cpf_adm=None):
                 janela_editar.title("Editar Dados do Administrador")
                 janela_editar.geometry("350x300")
 
-                tk.Label(janela_editar, text="Editar Nome").pack()
+                # Obter login atual do ADM
+                cursor.execute("SELECT login FROM Adm WHERE cpf = ?", (cpf_adm,))
+                login_result = cursor.fetchone()
+                login_atual = login_result[0] if login_result else ""
+
+                tk.Label(janela_editar, text="Nome").pack()
                 entry_nome = tk.Entry(janela_editar)
                 entry_nome.insert(0, nome_adm)
                 entry_nome.pack()
 
-                tk.Label(janela_editar, text="Editar Senha").pack()
+                tk.Label(janela_editar, text="Login").pack()
+                entry_login = tk.Entry(janela_editar)
+                entry_login.insert(0, login_atual)
+                entry_login.pack()
+
+                tk.Label(janela_editar, text="Senha").pack()
                 entry_senha = tk.Entry(janela_editar, show="*")
                 entry_senha.pack()
 
                 def salvar_edicao():
                     novo_nome = entry_nome.get()
+                    novo_login = entry_login.get()
                     nova_senha = entry_senha.get()
 
-                    cursor.execute("UPDATE Adm SET nome = ?, senha = ? WHERE cpf = ?", (novo_nome, nova_senha, cpf_adm))
-                    bd.conn.commit()
-                    messagebox.showinfo("Sucesso", "Dados atualizados.")
+                    try:
+                        cursor.execute("UPDATE Adm SET nome = ?, login = ?, senha = ? WHERE cpf = ?",
+                                       (novo_nome, novo_login, nova_senha, cpf_adm))
+                        bd.conn.commit()
+                        messagebox.showinfo("Sucesso", "Dados atualizados com sucesso!")
+                        janela_editar.destroy()
+                    except Exception as e:
+                        messagebox.showerror("Erro", f"Erro ao atualizar dados: {e}")
 
                 tk.Button(janela_editar, text="Salvar", command=salvar_edicao).pack(pady=10)
 
