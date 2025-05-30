@@ -22,12 +22,12 @@ menu_bar = tk.Menu(root)
 menu_arquivo = tk.Menu(menu_bar, tearoff=0)
 menu_arquivo.add_separator()
 menu_arquivo.add_command(label="Sair", command=root.quit)
-menu_bar.add_cascade(label="1", menu=menu_arquivo)
+menu_bar.add_cascade(label="<a ser feito>", menu=menu_arquivo)
 
 # Menu "Ajuda"
 menu_ajuda = tk.Menu(menu_bar, tearoff=0)
 menu_ajuda.add_command(label="Sobre", command=lambda: messagebox.showinfo("Sobre", "Sistema de Login v1.0"))
-menu_bar.add_cascade(label="2", menu=menu_ajuda)
+menu_bar.add_cascade(label="<a ser feito>", menu=menu_ajuda)
 
 # Associar a barra de menu à janela
 root.config(menu=menu_bar)
