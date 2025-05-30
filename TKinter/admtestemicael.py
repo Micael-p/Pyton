@@ -56,6 +56,54 @@ def mostrar_usuarios(nome_adm=None, cpf_adm=None):
 
                 tk.Button(frame, text="Excluir", fg="red", command=excluir_usuario).pack(side="right", padx=5)
 
+                def editar_usuario(cpf_local=cpf, nome_local=nome, bloco_local=bloco, ap_local=numeroAp,
+                                   email_local=email):
+                    janela_editar = tk.Toplevel(janela_usuarios)
+                    janela_editar.title(f"Editar: {nome_local}")
+                    janela_editar.geometry("350x350")
+
+                    tk.Label(janela_editar, text="Nome").pack()
+                    entry_nome = tk.Entry(janela_editar)
+                    entry_nome.insert(0, nome_local)
+                    entry_nome.pack()
+
+                    tk.Label(janela_editar, text="Bloco").pack()
+                    entry_bloco = tk.Entry(janela_editar)
+                    entry_bloco.insert(0, bloco_local)
+                    entry_bloco.pack()
+
+                    tk.Label(janela_editar, text="Número do AP").pack()
+                    entry_ap = tk.Entry(janela_editar)
+                    entry_ap.insert(0, ap_local)
+                    entry_ap.pack()
+
+                    tk.Label(janela_editar, text="Email").pack()
+                    entry_email = tk.Entry(janela_editar)
+                    entry_email.insert(0, email_local)
+                    entry_email.pack()
+
+                    def salvar_edicao():
+                        novo_nome = entry_nome.get()
+                        novo_bloco = entry_bloco.get()
+                        novo_ap = entry_ap.get()
+                        novo_email = entry_email.get()
+
+                        try:
+                            cursor.execute("""
+                                UPDATE Pessoa
+                                SET nome = ?, bloco = ?, numeroAp = ?, email = ?
+                                WHERE cpf = ?
+                            """, (novo_nome, int(novo_bloco), int(novo_ap), novo_email, cpf_local))
+                            bd.conn.commit()
+                            messagebox.showinfo("Sucesso", "Dados do usuário atualizados.")
+                            janela_editar.destroy()
+                        except Exception as e:
+                            messagebox.showerror("Erro", f"Erro ao atualizar: {e}")
+
+                    tk.Button(janela_editar, text="Salvar Alterações", command=salvar_edicao).pack(pady=10)
+
+                tk.Button(frame, text="Editar", fg="blue", command=editar_usuario).pack(side="right", padx=5)
+
             # ADM - editar os próprios dados
             def editar_adm():
                 janela_editar = tk.Toplevel(janela_usuarios)
