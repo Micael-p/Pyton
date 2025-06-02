@@ -42,6 +42,12 @@ tela_login()"
 "tk.Button(janela_dados, text="Voltar para Login", command=tela_login).pack(pady=5)"
 
 
+3- SUBISTITUA NO "excluir_conta":
+"root.quit()"
+
+POR:
+"tela_login()"
+
 
 
 
