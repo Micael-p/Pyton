@@ -60,3 +60,4 @@ POR:
 "def from_interface_voltar_login(root):
     from interface import tela_login
     tela_login()"
+("POR ALGUM MOTIVO ESSE BOTÂO SÓ FUNCIONA CORRETAMENTE A PARTIR DA 2 VEZ QUE  ELE É UTILIZADO")
