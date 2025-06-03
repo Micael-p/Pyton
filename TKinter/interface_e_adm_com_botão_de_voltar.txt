@@ -53,11 +53,11 @@ POR:
 
 <adm.py>
 1- ADICIONE DENTRO DA FUNÇÂO "mostrar_usuarios":
-"tk.Button(janela_usuarios, text="Voltar para Login", command=lambda: from_interface_voltar_login(root)).pack(pady=10)"
+"tk.Button(janela_usuarios, text="Voltar para Login", command=voltar_para_login).pack(pady=10)"
 
 
 2- CRIE UMA NOVA FUNÇÂO:
-"def from_interface_voltar_login(root):
+"def voltar_para_login():
     from interface import tela_login
     tela_login()"
 ("POR ALGUM MOTIVO ESSE BOTÂO SÓ FUNCIONA CORRETAMENTE A PARTIR DA 2 VEZ QUE  ELE É UTILIZADO")
