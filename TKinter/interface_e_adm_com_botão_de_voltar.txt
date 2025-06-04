@@ -58,6 +58,6 @@ POR:
 
 2- CRIE UMA NOVA FUNÇÂO:
 "def voltar_para_login():
-    from interface import tela_login
-    tela_login()"
+    from interface import mostrar_tela_login
+    mostrar_tela_login()"
 ("POR ALGUM MOTIVO ESSE BOTÂO SÓ FUNCIONA CORRETAMENTE A PARTIR DA 2 VEZ QUE ELE É UTILIZADO")
